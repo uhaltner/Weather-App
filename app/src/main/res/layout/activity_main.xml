@@ -13,9 +13,9 @@
         android:id="@+id/textCityDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50px"
-        android:layout_marginTop="100px"
-        android:text="Enter City Name:"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="100dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -25,13 +25,13 @@
         android:id="@+id/lblCityEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50px"
-        android:layout_marginRight="50px"
-        android:hint="e.g. Halifax"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="Enter City Name (e.g. Halifax)"
         android:inputType="text" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonCity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -46,94 +46,117 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
-        android:text="City"
-        android:textAlignment="center" />
+        android:text="-"
+        android:textAlignment="center"
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/textTemperature"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="? degC"
-        android:textAlignment="center" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="-"
+        android:textAlignment="center"
+        android:textSize="36sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
         <TextView
             android:id="@+id/textMinTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Min."
-            android:textAlignment="center" />
+            android:layout_weight="50"
+            android:text="Min. °C"
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textMaxTemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Max."
-            android:textAlignment="center" />
+            android:layout_weight="50"
+            android:text="Max. °C"
+            android:textAlignment="center"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textMainWeather"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Loading..."
-        android:textAlignment="center" />
+        android:text="-"
+        android:textAlignment="center"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/textDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Loading..."
-        android:textAlignment="center" />
+        android:text="-"
+        android:textAlignment="center"
+        android:textSize="24sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
         <TextView
             android:id="@+id/textHumidityValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textAlignment="center" />
+            android:layout_weight="50"
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textCloudsValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"
-            android:textAlignment="center" />
+            android:layout_weight="50"
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
 
         <TextView
             android:id="@+id/textHumidityDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="50"
             android:text="Humidity"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/textCloudsDisplay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="50"
             android:text="Clouds"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>
