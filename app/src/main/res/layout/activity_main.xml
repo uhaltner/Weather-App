@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="10"
-            android:hint="Enter city name (e.g. Halifax)"
+            android:hint="e.g. Halifax, Canada"
             android:inputType="text"
             android:textColor="@color/colourWhite"
             android:textColorHint="@color/colourHint" />
@@ -41,12 +41,21 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textCountryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:text="-"
+        android:textAlignment="center"
+        android:textColor="@color/colourWhite"
+        android:textSize="18sp" />
+
+    <TextView
         android:id="@+id/textCityName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="100dp"
+        android:layout_gravity="center"
         android:text="-"
         android:textAlignment="center"
         android:textColor="@color/colourWhite"
@@ -87,7 +96,6 @@
             android:id="@+id/weatherIconImage"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_gravity="center_vertical"
             android:layout_weight="50"
             android:textAlignment="viewEnd"
             app:srcCompat="@drawable/ic_cloud_off_white_24dp" />
@@ -103,7 +111,6 @@
                 android:id="@+id/textTemperature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="50"
                 android:text="-"
                 android:textAlignment="viewStart"

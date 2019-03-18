@@ -1,3 +1,4 @@
+//Ueli Haltner [B00526617]
 package com.example.weatherapp;
 
 

@@ -1,3 +1,4 @@
+//Ueli Haltner [B00526617]
 package com.example.weatherapp;
 
 import android.content.Context;
@@ -22,19 +23,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.security.auth.login.LoginException;
-
-import static android.widget.Toast.LENGTH_SHORT;
+import java.util.Locale;
 
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private CountryCodes countryCodes = new CountryCodes();
 
     private static final String TAG = "MainActivity";
 
     private EditText cityInput;
     private ImageButton cityButton;
     private TextView cityNameText;
+    private TextView countryNameText;
     private TextView currentTempText;
     private TextView maxTempText;
     private TextView minTempText;
@@ -52,9 +54,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //link variables to designated fields
         cityButton = findViewById(R.id.buttonCity);
         cityInput = findViewById(R.id.lblCityEdit);
         cityNameText = findViewById(R.id.textCityName);
+        countryNameText = findViewById(R.id.textCountryName);
         currentTempText = findViewById(R.id.textTemperature);
         maxTempText = findViewById(R.id.textMaxTemp);
         minTempText = findViewById(R.id.textMinTemp);
@@ -65,26 +69,63 @@ public class MainActivity extends AppCompatActivity {
         imageView = findViewById(R.id.weatherIconImage);
         screen = findViewById(R.id.screenBackground);
 
-         cityButton.setOnClickListener(new View.OnClickListener() {
+
+
+        //OnClickListener for search button
+        cityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final String city = cityInput.getText().toString().toLowerCase();
+                String city = "";
+                String country = "";
+                String query = "";
+                String[] values;
 
 
-                if(city.isEmpty()) {
+                //get input from user
+                final String input = cityInput.getText().toString().toUpperCase();
 
-                    Toast.makeText(getApplicationContext(), "Can not find city",Toast.LENGTH_SHORT).show();
+                //check if the input contains a comma, requires to separate city and country
+                if(input.contains(",")){
 
-                }else{
+                    //split the input into an array of strings if comma
+                    values = input.split(",");
 
-                    String country = "ca";
-                    String q = city + "," + country;
+                    //if the input contains a single comma, then there will be 2 values
+                    if(values.length == 2){
 
-                    final String url = "http://api.openweathermap.org/data/2.5/weather?q="+q+"&APPID=" + getString(R.string.weather_api_key);
+                        //get the city and trim white space and reduce all extra white space
+                        city = values[0].trim();
+                        city.replaceAll("\\s+", " ");
+
+                        //get the country and trim white space and reduce all extra white space
+                        country = values[1].trim();
+                        country.replaceAll("\\s+", " ");
+
+                        //if the country code is not a valid country code, get the country code from the entered country name
+                        if(countryCodes.isValidCountryCode(country) == false){
+
+                            //returns the country code of the country name if it exists; otherwise blank
+                            country = countryCodes.getCountryCode(country);
+                        }
+
+
+                    }
+                }
+
+                //Log.e(TAG, "onClick: City Text: " + city);
+                //Log.e(TAG, "onClick: Country Text: " + country);
+
+                //create the query
+                query = city + "," + country;
+
+
+                //if neither city and country are empty, try the query
+                if(city.isEmpty() == false && country.isEmpty() == false){
+
+                    final String url = "http://api.openweathermap.org/data/2.5/weather?q="+query+"&APPID=" + getString(R.string.weather_api_key);
 
                     Log.d(TAG, "onClick: URL is " + url);
-
 
                     runnable = new Runnable() {
                         @Override
@@ -97,15 +138,30 @@ public class MainActivity extends AppCompatActivity {
                     Thread thread = new Thread(null, runnable, "background");
                     thread.start();
 
-                    //create a copy of the input/keyboard
-                    InputMethodManager inputManager = (InputMethodManager)
-                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                //else if the country is empty, country is invalid
+                }else if(city.isEmpty() == false && country.isEmpty() == true){
 
-                    //hide the keyboard when pressing the submit button
-                    inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-                            InputMethodManager.HIDE_NOT_ALWAYS);
+                    Toast.makeText(getApplicationContext(), "Invalid country",Toast.LENGTH_SHORT).show();
 
+                //else if the city is empty, city is invalid
+                }else if(city.isEmpty() == true && country.isEmpty() == false){
+
+                    Toast.makeText(getApplicationContext(), "Invalid city",Toast.LENGTH_SHORT).show();
+
+                //else if both are empty, city or country is invalid, or format all together
+                }else if(city.isEmpty() == true && country.isEmpty() == true) {
+
+                    Toast.makeText(getApplicationContext(), "Invalid city or country",Toast.LENGTH_SHORT).show();
                 }
+
+
+                //create a copy of the input/keyboard
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                //hide the keyboard when pressing the submit button
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
 
@@ -113,9 +169,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Method that send the Weather API url and listens for a response
+     * If a response is received, populate the screen with the weather information
+     * If an error is thrown, the api could not find the weather for that location and user is notified
+     * @param url
+     */
     public void getWeather(String url){
 
-        Log.d(TAG, "getWeather: called");
+        //Log.d(TAG, "getWeather: called");
         
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -124,14 +186,19 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 //handle response
 
-                Log.e(TAG, "onResponse: JSON " + response.toString());
+                //Log.e(TAG, "onResponse: JSON " + response.toString());
 
                 try {                  
 
-
+                    //Parse information from JSON and set text on screen
                     String city = response.getString("name");
                     cityNameText.setText(city);
 
+                    JSONObject sys = response.getJSONObject("sys");
+
+                    String countryCode = sys.getString("country");
+                    Locale locale = new Locale("",countryCode.toUpperCase());
+                    countryNameText.setText(locale.getDisplayCountry());
 
                     JSONObject main = response.getJSONObject("main");
 
@@ -154,13 +221,15 @@ public class MainActivity extends AppCompatActivity {
 
                     String mainDesc = weather.getJSONObject(0).getString("main");
                     String description = weather.getJSONObject(0).getString("description");
-                    int id = weather.getJSONObject(0).getInt("id");
-                    String icon = weather.getJSONObject(0).getString("icon");
-
-                    setIcon(id, icon);
 
                     mainWeatherText.setText(mainDesc);
                     descriptionText.setText(description);
+
+                    int id = weather.getJSONObject(0).getInt("id");
+                    String icon = weather.getJSONObject(0).getString("icon");
+
+                    //populate the icon based on the ID and the icon text received
+                    setIcon(id, icon);
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -174,9 +243,8 @@ public class MainActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error){
                 // handle error
 
-
-                Toast.makeText(getApplicationContext(), "response failed", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "onErrorResponse: JSON Error Response ");
+                Toast.makeText(getApplicationContext(), "Location not found", Toast.LENGTH_SHORT).show();
+                //Log.e(TAG, "onErrorResponse: JSON Error Response ");
 
             }
 
@@ -274,6 +342,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 
 }
